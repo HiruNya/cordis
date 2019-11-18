@@ -1,9 +1,15 @@
 //! The module to provide types that interface with the Websocket Gateway API.
 
-use serde::{Deserialize, Serialize};
+use serde_repr::{Deserialize_repr, Serialize_repr};
 
+mod payload;
+pub use payload::ReceivedPayload;
 mod hello;
 pub use hello::Hello;
+mod identity;
+pub use identity::{ConnectionProperties, Identity};
+mod status_update;
+pub use status_update::{Activity, ActivityType, Status, StatusUpdate};
 
 /// The API version of the gateway this crate will support.
 pub const VERSION: u8 = 6;
@@ -12,51 +18,54 @@ pub const VERSION: u8 = 6;
 ///
 /// [See the official Discord documentation for more information.](https://discordapp.com/developers/docs/topics/opcodes-and-status-codes#gateway-opcodes)
 #[allow(missing_docs)]
-#[derive(Deserialize)]
-#[serde(tag = "op")]
-pub enum ReceivedOperation {
+#[derive(Deserialize_repr)]
+#[repr(u8)]
+pub enum RecvOpCode {
     /// Dispatches an event.
-    #[serde(rename = "0")]
-    Dispatch,
+    Dispatch = 0,
     /// Used for ping checking.
-    #[serde(rename = "1")]
-    Heatbeat,
+    Heartbeat = 1,
     /// Used to tell clients to reconnect to the gateway.
-    #[serde(rename = "7")]
-    Reconnect,
+    Reconnect = 7,
     /// Used to notify the client they have an invalid session id.
-    #[serde(rename = "9")]
-    InvalidSession,
+    InvalidSession = 9,
     /// Sent immediately after connecting, contains heartbeat and server debug information.
-    #[serde(rename = "10")]
-    Hello{ data: Hello },
+    Hello = 10,
     /// Sent immediately following a client heartbeat that was received.
-    #[serde(rename = "11")]
-    HeartbeatACK, 
+    /// 
+    /// If the client doesn't receive this in-between sending `Heartbeat`s,
+    /// close the connection with a non-1000 close code, reconnect, and attempt to resume.
+    HeartbeatACK = 11, 
 }
 
 /// All the different operations that can be *sent* by the client to the server.
 ///
 /// [See the official Discord documentation for more information.](https://discordapp.com/developers/docs/topics/opcodes-and-status-codes#gateway-opcodes)
-#[derive(Serialize)]
-#[serde(tag = "op")]
-pub enum SendableOperation {
+#[derive(Serialize_repr)]
+#[repr(u8)]
+pub enum SendOpCode {
     /// Used for ping checking.
-    #[serde(rename = "1")]
-    Heatbeat,
+    Heartbeat = 1,
     /// Used for client handshake.
-    #[serde(rename = "2")]
-    Identity,
+    Identity = 2,
     /// Used to update the client status.
-    #[serde(rename = "3")]
-    StatusUpdate,
+    StatusUpdate = 3,
     /// Used to join/move/leave voice channels.
-    #[serde(rename = "4")]
-    VoiceStateUpdate,
+    VoiceStateUpdate = 4,
     /// Used to resume a closed connection.
-    #[serde(rename = "6")]
-    Resume,
+    Resume = 6,
     /// Used to request guild members.
-    #[serde(rename = "8")]
-    RequestGuildMembers,
+    RequestGuildMembers = 8,
+}
+
+impl Default for RecvOpCode {
+    fn default() -> Self {
+        Self::Heartbeat
+    }
+}
+
+impl Default for SendOpCode {
+    fn default() -> Self {
+        Self::Heartbeat
+    }
 }
