@@ -115,7 +115,6 @@ impl Serialize for SendablePayload {
                     ..InitialPayload::default()
                 }
             },
-            _ => InitialPayload::default(), 
         };
         InitialPayload::<SendOpCode>::serialize(&payload, serializer)
     }
