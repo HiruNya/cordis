@@ -2,7 +2,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::{from_value, to_value, Value as JsonValue};
 
 use super::{RecvOpCode, SendOpCode};
-use super::{Hello, Identity};
+use super::{Hello, Identity, StatusUpdate};
 
 #[derive(Default, Deserialize, Serialize)]
 struct InitialPayload<O> {
@@ -57,7 +57,7 @@ pub enum SendablePayload {
     /// Used for client handshake.
     Identity(Identity),
     /// Used to update the client status.
-    StatusUpdate,
+    StatusUpdate(StatusUpdate),
     /// Used to join/move/leave voice channels.
     VoiceStateUpdate,
     /// Used to resume a closed connection.
@@ -83,6 +83,13 @@ impl Serialize for SendablePayload {
                 InitialPayload {
                     op: SendOpCode::Identity,
                     d: to_value(&identity).expect("Error serialising `Identity` for Identity"),
+                    ..InitialPayload::default()
+                }
+            },
+            SendablePayload::StatusUpdate(status) => {
+                InitialPayload {
+                    op: SendOpCode::StatusUpdate,
+                    d: to_value(status).expect("Error serializing `StatusUpdate` for StatusUpdate"),
                     ..InitialPayload::default()
                 }
             },
