@@ -7,7 +7,7 @@ use super::{Hello, Identity, Resume, StatusUpdate, VoiceStateUpdate};
 #[derive(Default, Deserialize, Serialize)]
 struct InitialPayload<O> {
     op: O,
-    d: JsonValue,
+    d: Option<JsonValue>,
     s: Option<u32>,
     t: Option<String>,
 }
@@ -40,7 +40,8 @@ impl<'de> Deserialize<'de> for ReceivedPayload {
     {
         let initial_payload = InitialPayload::<RecvOpCode>::deserialize(deserializer)?;
         match initial_payload.op {
-            RecvOpCode::Hello => Ok(ReceivedPayload::Hello(from_value(initial_payload.d).expect("Could not parse `Hello` Payload data"))),
+            RecvOpCode::Hello => Ok(ReceivedPayload::Hello(from_value(initial_payload.d.expect("Expected data in Hello event.")).expect("Could not parse `Hello` Payload data"))),
+            RecvOpCode::HeartbeatACK => Ok(ReceivedPayload::HeartbeatACK),
             _ => Ok(ReceivedPayload::Heartbeat)
         }
     }
@@ -75,35 +76,35 @@ impl Serialize for SendablePayload {
             SendablePayload::Heartbeat(seq) => {
                 InitialPayload {
                     op: SendOpCode::Heartbeat,
-                    d: to_value(seq).expect("Error serialising `Option<u32>` for Heartbeat"),
+                    d: Some(to_value(seq).expect("Error serialising `Option<u32>` for Heartbeat")),
                     ..InitialPayload::default()
                 }
             },
             SendablePayload::Identity(identity) => {
                 InitialPayload {
                     op: SendOpCode::Identity,
-                    d: to_value(&identity).expect("Error serialising `Identity` for Identity"),
+                    d: Some(to_value(&identity).expect("Error serialising `Identity` for Identity")),
                     ..InitialPayload::default()
                 }
             },
             SendablePayload::StatusUpdate(status) => {
                 InitialPayload {
                     op: SendOpCode::StatusUpdate,
-                    d: to_value(status).expect("Error serialising `StatusUpdate` for StatusUpdate"),
+                    d: Some(to_value(status).expect("Error serialising `StatusUpdate` for StatusUpdate")),
                     ..InitialPayload::default()
                 }
             },
             SendablePayload::VoiceStateUpdate(status) => {
                 InitialPayload {
                     op: SendOpCode::VoiceStateUpdate,
-                    d: to_value(status).expect("Error serialising `VoiceStatusUpdate` for VoiceStatusUpdate"),
+                    d: Some(to_value(status).expect("Error serialising `VoiceStatusUpdate` for VoiceStatusUpdate")),
                     ..InitialPayload::default()
                 }
             },
             SendablePayload::Resume(resume) => {
                 InitialPayload {
                     op: SendOpCode::Resume,
-                    d: to_value(resume).expect("Error serialising `Resume` for Resume"),
+                    d: Some(to_value(resume).expect("Error serialising `Resume` for Resume")),
                     ..InitialPayload::default()
                 }
             },
