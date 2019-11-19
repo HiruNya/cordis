@@ -10,6 +10,8 @@ mod identity;
 pub use identity::{ConnectionProperties, Identity};
 mod status_update;
 pub use status_update::{Activity, ActivityType, Status, StatusUpdate};
+mod request_guild_members;
+pub use request_guild_members::RequestGuildMembers;
 mod resume;
 pub use resume::Resume;
 mod voice_state_update;

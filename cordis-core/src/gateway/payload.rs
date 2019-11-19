@@ -2,7 +2,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::{from_value, to_value, Value as JsonValue};
 
 use super::{RecvOpCode, SendOpCode};
-use super::{Hello, Identity, Resume, StatusUpdate, VoiceStateUpdate};
+use super::{Hello, Identity, RequestGuildMembers, Resume, StatusUpdate, VoiceStateUpdate};
 
 #[derive(Default, Deserialize, Serialize)]
 struct InitialPayload<O> {
@@ -64,7 +64,7 @@ pub enum SendablePayload {
     /// Used to resume a closed connection.
     Resume(Resume),
     /// Used to request guild members.
-    RequestGuildMembers,
+    RequestGuildMembers(RequestGuildMembers),
 }
 
 impl Serialize for SendablePayload {
@@ -105,6 +105,13 @@ impl Serialize for SendablePayload {
                 InitialPayload {
                     op: SendOpCode::Resume,
                     d: Some(to_value(resume).expect("Error serialising `Resume` for Resume")),
+                    ..InitialPayload::default()
+                }
+            },
+            SendablePayload::RequestGuildMembers(request) => {
+                InitialPayload {
+                    op: SendOpCode::RequestGuildMembers,
+                    d: Some(to_value(request).expect("Error serialising `RequestGuildMembers` for RequestGuildMembers")),
                     ..InitialPayload::default()
                 }
             },
