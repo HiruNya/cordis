@@ -22,8 +22,15 @@ pub enum ReceivedPayload {
     Heartbeat(Option<u32>),
     /// Used to tell clients to reconnect to the gateway.
     Reconnect,
-    /// Used to notify the client they have an invalid session id.
-    InvalidSession,
+    /// Indicates the current session is invalid.
+    ///
+    /// Caused by three things:
+    /// * The gateway could not initialise a session after receiving an `Identity` command.
+    /// * The gateway could not resume a previous session after receiving a `Resume` command.
+    /// * The gateway has invalidated an active session and is requesting client action.
+    ///
+    /// The inner boolean indicates whether the session may be resumable.
+    InvalidSession(bool),
     /// Sent immediately after connecting, contains heartbeat and server debug information.
     Hello(Hello),
     /// Sent immediately following a client heartbeat that was received.
@@ -42,6 +49,7 @@ impl<'de> Deserialize<'de> for ReceivedPayload {
         match initial_payload.op {
             RecvOpCode::Heartbeat => Ok(ReceivedPayload::Heartbeat(from_value(initial_payload.d.expect("Expected data in Heartbeat event.")).expect("Could not parse `Heartbeat` Payload data"))),
             RecvOpCode::Reconnect => Ok(ReceivedPayload::Reconnect),
+            RecvOpCode::InvalidSession => Ok(ReceivedPayload::InvalidSession(from_value(initial_payload.d.expect("Expected data in InvalidSession event")).expect("Could not parse `InvalidSession` Payload data"))),
             RecvOpCode::Hello => Ok(ReceivedPayload::Hello(from_value(initial_payload.d.expect("Expected data in Hello event.")).expect("Could not parse `Hello` Payload data"))),
             RecvOpCode::HeartbeatACK => Ok(ReceivedPayload::HeartbeatACK),
             _ => Ok(ReceivedPayload::Heartbeat(None))
