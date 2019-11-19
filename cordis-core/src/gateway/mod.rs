@@ -12,6 +12,8 @@ mod status_update;
 pub use status_update::{Activity, ActivityType, Status, StatusUpdate};
 mod resume;
 pub use resume::Resume;
+mod voice_state_update;
+pub use voice_state_update::VoiceStateUpdate;
 
 /// The API version of the gateway this crate will support.
 pub const VERSION: u8 = 6;
