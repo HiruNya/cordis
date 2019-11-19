@@ -3,7 +3,7 @@
 use serde_repr::{Deserialize_repr, Serialize_repr};
 
 mod payload;
-pub use payload::ReceivedPayload;
+pub use payload::{ReceivedPayload, SendablePayload};
 mod hello;
 pub use hello::Hello;
 mod identity;
