@@ -10,6 +10,8 @@ mod identity;
 pub use identity::{ConnectionProperties, Identity};
 mod status_update;
 pub use status_update::{Activity, ActivityType, Status, StatusUpdate};
+mod resume;
+pub use resume::Resume;
 
 /// The API version of the gateway this crate will support.
 pub const VERSION: u8 = 6;
