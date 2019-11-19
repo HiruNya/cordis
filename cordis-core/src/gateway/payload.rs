@@ -19,7 +19,7 @@ pub enum ReceivedPayload {
     /// Dispatches an event.
     Dispatch,
     /// Used for ping checking.
-    Heartbeat,
+    Heartbeat(Option<u32>),
     /// Used to tell clients to reconnect to the gateway.
     Reconnect,
     /// Used to notify the client they have an invalid session id.
@@ -40,9 +40,10 @@ impl<'de> Deserialize<'de> for ReceivedPayload {
     {
         let initial_payload = InitialPayload::<RecvOpCode>::deserialize(deserializer)?;
         match initial_payload.op {
+            RecvOpCode::Heartbeat => Ok(ReceivedPayload::Heartbeat(from_value(initial_payload.d.expect("Expected data in Heartbeat event.")).expect("Could not parse `Heartbeat` Payload data"))),
             RecvOpCode::Hello => Ok(ReceivedPayload::Hello(from_value(initial_payload.d.expect("Expected data in Hello event.")).expect("Could not parse `Hello` Payload data"))),
             RecvOpCode::HeartbeatACK => Ok(ReceivedPayload::HeartbeatACK),
-            _ => Ok(ReceivedPayload::Heartbeat)
+            _ => Ok(ReceivedPayload::Heartbeat(None))
         }
     }
 }
