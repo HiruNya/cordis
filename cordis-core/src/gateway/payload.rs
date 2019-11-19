@@ -41,6 +41,7 @@ impl<'de> Deserialize<'de> for ReceivedPayload {
         let initial_payload = InitialPayload::<RecvOpCode>::deserialize(deserializer)?;
         match initial_payload.op {
             RecvOpCode::Heartbeat => Ok(ReceivedPayload::Heartbeat(from_value(initial_payload.d.expect("Expected data in Heartbeat event.")).expect("Could not parse `Heartbeat` Payload data"))),
+            RecvOpCode::Reconnect => Ok(ReceivedPayload::Reconnect),
             RecvOpCode::Hello => Ok(ReceivedPayload::Hello(from_value(initial_payload.d.expect("Expected data in Hello event.")).expect("Could not parse `Hello` Payload data"))),
             RecvOpCode::HeartbeatACK => Ok(ReceivedPayload::HeartbeatACK),
             _ => Ok(ReceivedPayload::Heartbeat(None))
