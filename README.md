@@ -1,5 +1,7 @@
 # Cordis
 
+![](https://github.com/HiruNya/cordis/workflows/Rust/badge.svg)
+
 A toy bot framework for Discord. This crate intends on allowing Discord bots to be made utilising the new ``async/await`` syntax.
 
 This crate is split into multiple sub-crates.
