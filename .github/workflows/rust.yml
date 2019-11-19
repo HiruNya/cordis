@@ -13,3 +13,7 @@ jobs:
       run: cargo build
     - name: Run tests
       run: cargo test
+    - name: Clippy
+      uses: actions-rs/clippy-check@v1.0.5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
