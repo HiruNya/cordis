@@ -26,7 +26,7 @@ pub const VERSION: u8 = 6;
 #[allow(missing_docs)]
 #[derive(Deserialize_repr)]
 #[repr(u8)]
-pub enum RecvOpCode {
+enum RecvOpCode {
     /// Dispatches an event.
     Dispatch = 0,
     /// Used for ping checking.
@@ -49,7 +49,7 @@ pub enum RecvOpCode {
 /// [See the official Discord documentation for more information.](https://discordapp.com/developers/docs/topics/opcodes-and-status-codes#gateway-opcodes)
 #[derive(Serialize_repr)]
 #[repr(u8)]
-pub enum SendOpCode {
+enum SendOpCode {
     /// Used for ping checking.
     Heartbeat = 1,
     /// Used for client handshake.
