@@ -4,11 +4,11 @@ use serde::Serialize;
 #[derive(Serialize)]
 pub struct VoiceStateUpdate {
     /// Id of the guild.
-    guid_id: String,
+    pub guid_id: String,
     /// Id of the channel client wants to join (none if disconnecting).
-    channel_id: Option<String>,
+    pub channel_id: Option<String>,
     /// Is the client muted?
-    self_mute: bool,
+    pub self_mute: bool,
     /// Is the client deafened?
-    self_deaf: bool,
+    pub self_deaf: bool,
 }
