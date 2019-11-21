@@ -2,14 +2,14 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_json::{from_value, to_value, Value as JsonValue};
 
 use super::{RecvOpCode, SendOpCode};
-use super::{Hello, Identity, RequestGuildMembers, Resume, StatusUpdate, VoiceStateUpdate};
+use super::{dispatch::{DispatchEvent, DispatchEventCode}, Hello, Identity, RequestGuildMembers, Resume, StatusUpdate, VoiceStateUpdate};
 
 #[derive(Default, Deserialize, Serialize)]
 struct InitialPayload<O> {
     op: O,
     d: Option<JsonValue>,
     s: Option<u32>,
-    t: Option<String>,
+    t: Option<DispatchEventCode>,
 }
 
 /// All the different payloads that can be *received* by the client from the server.
@@ -17,7 +17,12 @@ struct InitialPayload<O> {
 /// [See the official Discord documentation for more information.](https://discordapp.com/developers/docs/topics/opcodes-and-status-codes#gateway-opcodes)
 pub enum ReceivedPayload {
     /// Dispatches an event.
-    Dispatch,
+    Dispatch {
+        /// Sequence number used for heartbeats and resuming sessions.
+        seq: u32,
+        /// The event that has been dispatched by the server.
+        event: DispatchEvent,
+    },
     /// Used for ping checking.
     Heartbeat(Option<u32>),
     /// Used to tell clients to reconnect to the gateway.
@@ -52,7 +57,12 @@ impl<'de> Deserialize<'de> for ReceivedPayload {
             RecvOpCode::InvalidSession => Ok(ReceivedPayload::InvalidSession(from_value(initial_payload.d.expect("Expected data in InvalidSession event")).expect("Could not parse `InvalidSession` Payload data"))),
             RecvOpCode::Hello => Ok(ReceivedPayload::Hello(from_value(initial_payload.d.expect("Expected data in Hello event.")).expect("Could not parse `Hello` Payload data"))),
             RecvOpCode::HeartbeatACK => Ok(ReceivedPayload::HeartbeatACK),
-            _ => Ok(ReceivedPayload::Heartbeat(None))
+            RecvOpCode::Dispatch => match initial_payload.t.expect("Could not find Dispatch Event Code")  {
+                DispatchEventCode::ChannelCreate => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::ChannelCreate(from_value(initial_payload.d.expect("Expected data in `ChannelCreate` event.")).expect("Could not parse `ChannelCreate` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `ChannelCreate` event"),
+                }),
+            },
         }
     }
 }

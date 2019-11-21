@@ -3,3 +3,4 @@
 //! without making any assumptions about what type of websocket crate or implementation is being used.
 
 pub mod gateway;
+pub mod resources;

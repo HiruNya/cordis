@@ -4,6 +4,7 @@ use serde_repr::{Deserialize_repr, Serialize_repr};
 
 mod payload;
 pub use payload::{ReceivedPayload, SendablePayload};
+pub mod dispatch;
 mod hello;
 pub use hello::Hello;
 mod identity;
