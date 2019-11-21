@@ -33,7 +33,7 @@ pub struct GuildTextChannel {
     /// Bots and Users with the permission ``manage_messages`` or ``manage_channel`` are unafected.
     pub rate_limit_per_user: u16,
     /// Id of the parent catergory for a channel.
-    pub parent_id: MessageId,
+    pub parent_id: Option<MessageId>,
     /// When the last pinned message was pinned.
     pub last_pin_timestamp: Option<DateTime<Utc>>,
 }

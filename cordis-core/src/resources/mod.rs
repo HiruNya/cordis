@@ -6,3 +6,5 @@ mod guild;
 pub use guild::GuildId;
 mod message;
 pub use message::MessageId;
+mod user;
+pub use user::UserId;
