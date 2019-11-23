@@ -10,6 +10,8 @@ mod guild_category;
 pub use guild_category::GuildCategoryChannel;
 mod group_dm;
 pub use group_dm::GroupDMChannel;
+mod guild_news;
+pub use guild_news::GuildNewsChannel;
 mod guild_text;
 pub use guild_text::GuildTextChannel;
 mod guild_voice;
@@ -31,6 +33,8 @@ pub enum Channel {
     GroupDm(GroupDMChannel),
     /// An organisational category that contains channels.
     GuildCategory(GuildCategoryChannel),
+    /// A channel that users can follow and crosspost into their own server,
+    GuildNews(GuildNewsChannel),
 }
 
 #[derive(Deserialize_repr)]
@@ -106,6 +110,14 @@ impl<'de> Deserialize<'de> for Channel {
                 guild_id: guild_id.expect("Could not find `guild_id` for GuildCategoryChannel."),
                 position: position.expect("Could not find `position` for GuildCategoryChannel."),
                 nsfw: nsfw.expect("Could not find `nsfw` for GuildCategoryChannel."),
+            }),
+            ChannelCode::GuildNews => Channel::GuildNews(GuildNewsChannel{
+                id, parent_id, last_message_id, last_pin_timestamp,
+                name: name.expect("Could not find `name` for GuildNewsChannel."),
+                topic: topic.expect("Could not find `topic` for GuildNewsChannel."),
+                guild_id: guild_id.expect("Could not find `guild_id` for GuildNewsChannel."),
+                position: position.expect("Could not find `position` for GuildNewsChannel."),
+                nsfw: nsfw.expect("Could not find `nsfw` for GuildNewsChannel."),
             }),
             _ => Channel::DM(DMChannel{
                 id, last_message_id, last_pin_timestamp,
