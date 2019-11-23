@@ -66,6 +66,10 @@ impl<'de> Deserialize<'de> for ReceivedPayload {
                     event: DispatchEvent::ChannelUpdate(from_value(initial_payload.d.expect("Expected data in `ChannelUpdate` event.")).expect("Could not parse `ChannelUpdate` Payload data.")),
                     seq: initial_payload.s.expect("Expected sequence number in `ChannelUpdate` event"),
                 }),
+                DispatchEventCode::ChannelDelete => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::ChannelDelete(from_value(initial_payload.d.expect("Expected data in `ChannelDelete` event.")).expect("Could not parse `ChannelDelete` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `Channeldelete` event"),
+                }),
             },
         }
     }

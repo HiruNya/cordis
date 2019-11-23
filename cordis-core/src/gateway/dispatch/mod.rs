@@ -12,6 +12,8 @@ pub enum DispatchEvent {
     ///
     /// This is not sent when the `last_message_id` field is altered.
     ChannelUpdate(Channel),
+    /// Sent when a channel is deleted.
+    ChannelDelete(Channel),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -19,4 +21,5 @@ pub enum DispatchEvent {
 pub(crate) enum DispatchEventCode {
     ChannelCreate,
     ChannelUpdate,
+    ChannelDelete,
 }
