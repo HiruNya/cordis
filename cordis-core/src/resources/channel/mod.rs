@@ -8,6 +8,8 @@ mod dm;
 pub use dm::DMChannel;
 mod guild_text;
 pub use guild_text::GuildTextChannel;
+mod guild_voice;
+pub use guild_voice::GuildVoiceChannel;
 
 /// A snowflake which is the id of a channel.
 #[derive(Deserialize)]
@@ -19,6 +21,8 @@ pub enum Channel {
     GuildText(GuildTextChannel),
     /// A direct message between users.
     DM(DMChannel),
+    /// A voice channel within a server.
+    GuildVoice(GuildVoiceChannel),
 }
 
 #[derive(Deserialize_repr)]
@@ -72,6 +76,15 @@ impl<'de> Deserialize<'de> for Channel {
             }),
             ChannelCode::Dm => Channel::DM(DMChannel{
                 id, last_message_id, last_pin_timestamp,
+            }),
+            ChannelCode::GuildVoice => Channel::GuildVoice(GuildVoiceChannel{
+                id, parent_id,
+                guild_id: guild_id.expect("Could not find `guild_id` for GuildVoiceChannel."),
+                position: position.expect("Could not find `position` for GUildVoiceChannel."),
+                name: name.expect("Could not find `name` for GuildVoiceChannel."),
+                nsfw: nsfw.expect("Could not find `nsfw` for GuildVoiceChannel."),
+                bitrate: bitrate.expect("Could not find `bitrate` for GuildVoiceChannel."),
+                user_limit: user_limit.expect("Could not find `user_limit` for GuildVoiceChannel."),
             }),
             _ => Channel::DM(DMChannel{
                 id, last_message_id, last_pin_timestamp,
