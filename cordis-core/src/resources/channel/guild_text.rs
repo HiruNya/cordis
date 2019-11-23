@@ -1,10 +1,8 @@
 use chrono::{DateTime, Utc};
-use serde::Deserialize;
 
 use super::{ChannelId, super::{GuildId, MessageId}};
 
 /// A text channel within a server.
-#[derive(Deserialize)]
 pub struct GuildTextChannel {
     /// The id of this channel.
     pub id: ChannelId,

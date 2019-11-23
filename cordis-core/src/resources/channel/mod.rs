@@ -4,6 +4,8 @@ use serde_repr::{Deserialize_repr};
 
 use super::{GuildId, MessageId, UserId};
 
+mod dm;
+pub use dm::DMChannel;
 mod guild_text;
 pub use guild_text::GuildTextChannel;
 
@@ -15,6 +17,8 @@ pub struct ChannelId(String);
 pub enum Channel {
     /// A text channel within a server.
     GuildText(GuildTextChannel),
+    /// A direct message between users.
+    DM(DMChannel),
 }
 
 #[derive(Deserialize_repr)]
@@ -57,7 +61,7 @@ impl<'de> Deserialize<'de> for Channel {
             bitrate, user_limit, icon, owner_id,
         } = InitialChannel::deserialize(d)?;
         Ok(match code {
-            ChannelCode::GuildText | _ => Channel::GuildText(GuildTextChannel{
+            ChannelCode::GuildText => Channel::GuildText(GuildTextChannel{
                 id, last_message_id, parent_id, last_pin_timestamp,
                 guild_id: guild_id.expect("Could not find `guild_id` for GuiltTextChannel."),
                 position: position.expect("Could not find `position` for GuildTextChannel."),
@@ -65,6 +69,12 @@ impl<'de> Deserialize<'de> for Channel {
                 topic: topic.expect("Could not find `topic` for GuildTextChannel."),
                 nsfw: nsfw.expect("Could not find `nsfw` for GuildTextChannel."),
                 rate_limit_per_user: rate_limit_per_user.expect("Could not find `rate_limit_per_user` for GuildTextChannel."),
+            }),
+            ChannelCode::Dm => Channel::DM(DMChannel{
+                id, last_message_id, last_pin_timestamp,
+            }),
+            _ => Channel::DM(DMChannel{
+                id, last_message_id, last_pin_timestamp,
             }),
         })
     }
