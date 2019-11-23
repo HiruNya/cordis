@@ -9,6 +9,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+    - uses: actions/cache@v1
+      with:
+        key: debug
+        path: target/debug
     - name: Build
       run: cargo doc --no-deps
     - name: Upload
