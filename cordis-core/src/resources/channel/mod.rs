@@ -1,3 +1,5 @@
+//! Contains the various Channel types.
+
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Deserializer};
 use serde_repr::{Deserialize_repr};

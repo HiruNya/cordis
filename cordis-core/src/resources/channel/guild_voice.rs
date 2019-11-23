@@ -1,5 +1,6 @@
 use super::super::{ChannelId, GuildId, MessageId};
 
+/// A voice channel within a server.
 pub struct GuildVoiceChannel {
     /// The id of this channel.
     pub id: ChannelId,

@@ -2,6 +2,7 @@ use chrono::{DateTime, Utc};
 
 use super::super::{ChannelId, MessageId, UserId};
 
+/// A direct message between multiple users.
 pub struct GroupDMChannel {
     /// The id of this channel.
     pub id: ChannelId,

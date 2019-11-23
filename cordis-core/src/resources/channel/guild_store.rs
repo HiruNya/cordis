@@ -1,5 +1,6 @@
 use super::super::{ChannelId, GuildId, MessageId};
 
+/// A channel in which game developers can sell their game on Discord.
 pub struct GuildStoreChannel {
     /// The id of this channel.
     pub id: ChannelId,

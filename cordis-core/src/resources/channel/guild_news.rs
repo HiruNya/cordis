@@ -1,6 +1,7 @@
 use chrono::{DateTime, Utc};
 use super::super::{ChannelId, GuildId, MessageId};
 
+/// A channel that users can follow and crosspost into their own server,
 pub struct GuildNewsChannel {
     /// The id of this channel.
     pub id: ChannelId,

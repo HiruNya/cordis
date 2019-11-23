@@ -1,6 +1,6 @@
 //! Types that relate to common Discord elements like Messages and Channels.
 
-mod channel;
+pub mod channel;
 pub use channel::{Channel, ChannelId};
 mod guild;
 pub use guild::GuildId;
