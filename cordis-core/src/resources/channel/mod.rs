@@ -6,6 +6,8 @@ use super::{GuildId, MessageId, UserId};
 
 mod dm;
 pub use dm::DMChannel;
+mod guild_category;
+pub use guild_category::GuildCategoryChannel;
 mod group_dm;
 pub use group_dm::GroupDMChannel;
 mod guild_text;
@@ -27,6 +29,8 @@ pub enum Channel {
     GuildVoice(GuildVoiceChannel),
     /// A direct message between multiple users.
     GroupDm(GroupDMChannel),
+    /// An organisational category that contains channels.
+    GuildCategory(GuildCategoryChannel),
 }
 
 #[derive(Deserialize_repr)]
@@ -95,6 +99,13 @@ impl<'de> Deserialize<'de> for Channel {
                 name: name.expect("Could not find `name` for GroupD<Channel."),
                 position: position.expect("Could not find `position` for GroupDMChannel."),
                 owner_id: owner_id.expect("Could not find `owner_id` for GroupDMChannel."),
+            }),
+            ChannelCode::GuildCategory => Channel::GuildCategory(GuildCategoryChannel{
+                id, parent_id,
+                name: name.expect("Could not find `name` for GuildCategoryChannel."),
+                guild_id: guild_id.expect("Could not find `guild_id` for GuildCategoryChannel."),
+                position: position.expect("Could not find `position` for GuildCategoryChannel."),
+                nsfw: nsfw.expect("Could not find `nsfw` for GuildCategoryChannel."),
             }),
             _ => Channel::DM(DMChannel{
                 id, last_message_id, last_pin_timestamp,
