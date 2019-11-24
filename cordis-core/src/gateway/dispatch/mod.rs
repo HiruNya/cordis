@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use super::super::resources::{Channel, Guild};
+use super::super::resources::{Channel, Guild, GuildId};
 
 mod channel_pins_update;
 pub use channel_pins_update::ChannelPinsUpdate;
@@ -27,6 +27,8 @@ pub enum DispatchEvent {
     GuildCreate(GuildCreate),
     /// Sent when a guild is updated.
     GuildUpdate(Guild),
+    /// Sent when a guild becomes unavailable during a guild outage, or when the user leaves or is removed form a guild.
+    GuildDelete(UnavailableGuild),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -38,4 +40,14 @@ pub(crate) enum DispatchEventCode {
     ChannelPinsUpdate,
     GuildCreate,
     GuildUpdate,
+    GuildDelete,
+}
+
+/// A partial guild object.
+#[derive(Deserialize)]
+pub struct UnavailableGuild {
+    /// The id of the guild.
+    pub id: GuildId,
+    /// If this is `false`, then the user was removed from the guild. 
+    pub unavailable: bool,
 }
