@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use super::super::resources::Channel;
+use super::super::resources::{Channel, Guild};
 
 mod channel_pins_update;
 pub use channel_pins_update::ChannelPinsUpdate;
@@ -25,6 +25,8 @@ pub enum DispatchEvent {
     ChannelPinsUpdate(ChannelPinsUpdate),
     /// Lazy load for unavailable guild, guild became available, or user joined a new guild.
     GuildCreate(GuildCreate),
+    /// Sent when a guild is updated.
+    GuildUpdate(Guild),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -35,4 +37,5 @@ pub(crate) enum DispatchEventCode {
     ChannelDelete,
     ChannelPinsUpdate,
     GuildCreate,
+    GuildUpdate,
 }
