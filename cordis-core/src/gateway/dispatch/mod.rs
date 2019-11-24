@@ -7,7 +7,7 @@ use super::super::resources::{Channel, Guild, GuildId};
 mod channel_pins_update;
 pub use channel_pins_update::ChannelPinsUpdate;
 mod guild_create;
-pub use guild_create::GuildCreate;
+pub use guild_create::{GuildCreate, PartialPresenceUpdate, PartialVoiceState, PartialUser};
 
 /// An event dispatched from the server.
 pub enum DispatchEvent {

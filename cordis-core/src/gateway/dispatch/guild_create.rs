@@ -28,6 +28,7 @@ pub struct GuildCreate {
     pub presences: Vec<PartialPresenceUpdate>,
 }
 
+/// A voice state of a member of a guild.
 #[derive(Deserialize)]
 pub struct PartialVoiceState {
     /// The channel id this user is connected to.
