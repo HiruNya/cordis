@@ -74,6 +74,10 @@ impl<'de> Deserialize<'de> for ReceivedPayload {
                     event: DispatchEvent::ChannelPinsUpdate(from_value(initial_payload.d.expect("Expected data in `ChannelPinsUpdate` event.")).expect("Could not parse `ChannelPinsUpdate` Payload data.")),
                     seq: initial_payload.s.expect("Expected sequence number in `ChanneldPinsUpdate` event"),
                 }),
+                DispatchEventCode::GuildCreate => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::GuildCreate(from_value(initial_payload.d.expect("Expected data in `GuildCreate` event.")).expect("Could not parse `GuildCreate` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `GuildCreate` event"),
+                }),
             },
         }
     }

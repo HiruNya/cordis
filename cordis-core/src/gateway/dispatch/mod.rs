@@ -6,6 +6,8 @@ use super::super::resources::Channel;
 
 mod channel_pins_update;
 pub use channel_pins_update::ChannelPinsUpdate;
+mod guild_create;
+pub use guild_create::GuildCreate;
 
 /// An event dispatched from the server.
 pub enum DispatchEvent {
@@ -21,6 +23,8 @@ pub enum DispatchEvent {
     ///
     /// Not sent when a pinned message is deleted.
     ChannelPinsUpdate(ChannelPinsUpdate),
+    /// Lazy load for unavailable guild, guild became available, or user joined a new guild.
+    GuildCreate(GuildCreate),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -30,4 +34,5 @@ pub(crate) enum DispatchEventCode {
     ChannelUpdate,
     ChannelDelete,
     ChannelPinsUpdate,
+    GuildCreate,
 }

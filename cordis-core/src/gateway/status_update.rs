@@ -1,5 +1,5 @@
-use serde::Serialize;
-use serde_repr::Serialize_repr;
+use serde::{Deserialize,Serialize};
+use serde_repr::{Deserialize_repr, Serialize_repr};
 
 #[derive(Default, Serialize)]
 /// Sent by the client to indicate a presence or status update. 
@@ -19,7 +19,7 @@ pub struct StatusUpdate {
 }
 
 /// The user's activity.
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 pub struct Activity {
     /// The activity's name.
     pub name: String,
@@ -33,7 +33,7 @@ pub struct Activity {
 }
 
 /// The user's status.
-#[derive(Serialize)]
+#[derive(Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Status {
     /// Online.
@@ -54,7 +54,7 @@ impl Default for Status {
 }
 
 /// The type of activity the user is doing.
-#[derive(Serialize_repr)]
+#[derive(Deserialize_repr, Serialize_repr)]
 #[repr(u8)]
 pub enum ActivityType {
     /// Playing {name}.

@@ -2,9 +2,15 @@
 
 pub mod channel;
 pub use channel::{Channel, ChannelId};
+mod emoji;
+pub use emoji::{Emoji, EmojiId};
 mod guild;
-pub use guild::GuildId;
+pub use guild::{Guild, GuildId};
+mod guild_member;
+pub use guild_member::GuildMember;
 mod message;
 pub use message::MessageId;
+mod role;
+pub use role::{Role, RoleId};
 mod user;
-pub use user::UserId;
+pub use user::{PremiumType, User, UserId};
