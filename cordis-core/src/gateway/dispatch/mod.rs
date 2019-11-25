@@ -34,7 +34,9 @@ pub enum DispatchEvent {
     /// Sent when a user is unbanned from a guild.
     GuildBanRemove(GuildBan),
     /// Sent when a guild's emojis have been updated.
-    GuildEmojisUpdate(GuildEmojisUpdate)
+    GuildEmojisUpdate(GuildEmojisUpdate),
+    /// Sent when a guild integration is update.
+    GuildIntegrationsUpdate(GuildIntegrationsUpdate),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -50,6 +52,7 @@ pub(crate) enum DispatchEventCode {
     GuildBanAdd,
     GuildBanRemove,
     GuildEmojisUpdate,
+    GuildIntegrationsUpdate,
 }
 
 /// A partial guild object.
@@ -77,4 +80,11 @@ pub struct GuildEmojisUpdate {
     pub guild_id: GuildId,
     /// The list of emojis on the guild.
     pub emojis: Vec<Emoji>,
+}
+
+/// Sent when a guild integration is updated.
+#[derive(Deserialize)]
+pub struct GuildIntegrationsUpdate {
+    /// The guild that is being updated.
+    pub guild_id: GuildId,
 }
