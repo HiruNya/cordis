@@ -2,12 +2,13 @@
 
 use serde::{Deserialize, Serialize};
 
-use super::super::resources::{Channel, Emoji, Guild, GuildId, GuildMember, RoleId, User};
+use super::Presence;
+use super::super::resources::{Channel, Emoji, Guild, GuildId, GuildMember, RoleId, User, UserId};
 
 mod channel_pins_update;
 pub use channel_pins_update::ChannelPinsUpdate;
 mod guild_create;
-pub use guild_create::{GuildCreate, PartialPresenceUpdate, PartialVoiceState, PartialUser};
+pub use guild_create::{ClientStatus, GuildCreate, PartialPresenceUpdate, PartialVoiceState, PartialUser};
 
 /// An event dispatched from the server.
 pub enum DispatchEvent {
@@ -43,6 +44,8 @@ pub enum DispatchEvent {
     GuildMemberRemove(GuildMemberRemove),
     /// Sent when a guild member is updated.
     GuildMemberUpdate(GuildMemberUpdate),
+    /// Sent in response to a `GuildRequestMembers`.
+    GuildMembersChunk(GuildMembersChunk),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -62,6 +65,7 @@ pub(crate) enum DispatchEventCode {
     GuildMemberAdd,
     GuildMemberRemove,
     GuildMemberUpdate,
+    GuildMembersChunk,
 }
 
 /// A partial guild object.
@@ -128,4 +132,17 @@ pub struct GuildMemberUpdate {
     pub user: User,
     /// The nickname of the user in the guild.
     pub nick: String,
+}
+
+/// Sent in response to a `GuildRequestMembers`.
+#[derive(Deserialize)]
+pub struct GuildMembersChunk {
+    /// The id of the guild.
+    pub guild_id: GuildId,
+    /// Set of guild members.
+    pub members: Vec<GuildMember>,
+    /// If passing invalid id to `RequestGuildMembers`, it will be returned here.
+    pub not_found: Vec<UserId>,
+    /// If passing `true` to `RequestGuildMembers`, presences will be returned here.
+    pub presences: Vec<Presence>,
 }

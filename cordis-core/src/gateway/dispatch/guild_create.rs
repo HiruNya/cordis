@@ -99,6 +99,7 @@ pub struct PartialUser {
     pub premium_type: Option<PremiumType>,
 }
 
+/// The status of a certain client on a certain platform.
 #[derive(Deserialize)]
 pub struct ClientStatus {
     /// The user's status set for an active desktop (Windows, Linux, Mac) application session.

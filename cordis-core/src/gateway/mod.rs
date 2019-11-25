@@ -7,6 +7,8 @@ pub use payload::{ReceivedPayload, SendablePayload};
 pub mod dispatch;
 mod hello;
 pub use hello::Hello;
+mod presence;
+pub use presence::Presence;
 mod identity;
 pub use identity::{ConnectionProperties, Identity};
 mod status_update;
