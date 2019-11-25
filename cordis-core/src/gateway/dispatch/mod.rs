@@ -39,6 +39,8 @@ pub enum DispatchEvent {
     GuildIntegrationsUpdate(GuildIntegrationsUpdate),
     /// Sent when a user joins a guild.
     GuildMemberAdd(GuildMemberAdd),
+    /// Sent when a user is removed from a guild (leaved/kicked/banned).
+    GuildMemberRemove(GuildMemberRemove),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -56,6 +58,7 @@ pub(crate) enum DispatchEventCode {
     GuildEmojisUpdate,
     GuildIntegrationsUpdate,
     GuildMemberAdd,
+    GuildMemberRemove,
 }
 
 /// A partial guild object.
@@ -100,4 +103,13 @@ pub struct GuildMemberAdd {
     /// The member joining the guild.
     #[serde(flatten)]
     pub member: GuildMember,
+}
+
+/// Sent when a user is removed from a guild (leaved/kicked/banned).
+#[derive(Deserialize)]
+pub struct GuildMemberRemove {
+    /// The id of the guild.
+    pub guild_id: GuildId,
+    /// The user who was removed.
+    pub user: User,
 }
