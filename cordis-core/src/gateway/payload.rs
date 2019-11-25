@@ -110,6 +110,10 @@ impl<'de> Deserialize<'de> for ReceivedPayload {
                     event: DispatchEvent::GuildMemberRemove(from_value(initial_payload.d.expect("Expected data in `GuildMemberRemove` event.")).expect("Could not parse `GuildMemberRemove` Payload data.")),
                     seq: initial_payload.s.expect("Expected sequence number in `GuildMemberRemove` event"),
                 }),
+                DispatchEventCode::GuildMemberUpdate => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::GuildMemberUpdate(from_value(initial_payload.d.expect("Expected data in `GuildMemberUpdate` event.")).expect("Could not parse `GuildMemberUpdate` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `GuildMemberUpdate` event"),
+                }),
             },
         }
     }
