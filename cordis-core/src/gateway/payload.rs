@@ -118,6 +118,18 @@ impl<'de> Deserialize<'de> for ReceivedPayload {
                     event: DispatchEvent::GuildMembersChunk(from_value(initial_payload.d.expect("Expected data in `GuildMembersChunk` event.")).expect("Could not parse `GuildMembersChunk` Payload data.")),
                     seq: initial_payload.s.expect("Expected sequence number in `GuildMembersChunk` event"),
                 }),
+                DispatchEventCode::GuildRoleAdd => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::GuildRoleAdd(from_value(initial_payload.d.expect("Expected data in `GuildRoleAdd` event.")).expect("Could not parse `GuildRoleAdd` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `GuildRoleAdd` event"),
+                }),
+                DispatchEventCode::GuildRoleUpdate => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::GuildRoleUpdate(from_value(initial_payload.d.expect("Expected data in `GuildRoleUpdate` event.")).expect("Could not parse `GuildRoleUpdate` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `GuildRoleUpdate` event"),
+                }),
+                DispatchEventCode::GuildRoleDelete => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::GuildRoleDelete(from_value(initial_payload.d.expect("Expected data in `GuildRoleDelete` event.")).expect("Could not parse `GuildRoleDelete` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `GuildRoleDelete` event"),
+                }),
             },
         }
     }

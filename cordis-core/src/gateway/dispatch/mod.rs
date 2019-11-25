@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 use super::Presence;
-use super::super::resources::{Channel, Emoji, Guild, GuildId, GuildMember, RoleId, User, UserId};
+use super::super::resources::{Channel, Emoji, Guild, GuildId, GuildMember, Role, RoleId, User, UserId};
 
 mod channel_pins_update;
 pub use channel_pins_update::ChannelPinsUpdate;
@@ -46,6 +46,12 @@ pub enum DispatchEvent {
     GuildMemberUpdate(GuildMemberUpdate),
     /// Sent in response to a `GuildRequestMembers`.
     GuildMembersChunk(GuildMembersChunk),
+    /// Sent when a guild role is added.
+    GuildRoleAdd(GuildRole),
+    /// Sent when a guild role is updated.
+    GuildRoleUpdate(GuildRole),
+    /// Sent when a guild role is deleted.
+    GuildRoleDelete(GuildRoleDelete),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -66,6 +72,9 @@ pub(crate) enum DispatchEventCode {
     GuildMemberRemove,
     GuildMemberUpdate,
     GuildMembersChunk,
+    GuildRoleAdd,
+    GuildRoleUpdate,
+    GuildRoleDelete,
 }
 
 /// A partial guild object.
@@ -145,4 +154,22 @@ pub struct GuildMembersChunk {
     pub not_found: Vec<UserId>,
     /// If passing `true` to `RequestGuildMembers`, presences will be returned here.
     pub presences: Vec<Presence>,
+}
+
+/// A role in a guild.
+#[derive(Deserialize)]
+pub struct GuildRole {
+    /// Id of the guild.
+    pub guild_id: GuildId,
+    /// The Role created/updated.
+    pub role: Role,
+}
+
+/// Sent when a guld role is deleted.
+#[derive(Deserialize)]
+pub struct GuildRoleDelete {
+    /// Id of the guild.
+    pub guild_id: GuildId,
+    /// Id of the role that was deleted.
+    pub role_id: RoleId,
 }
