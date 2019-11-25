@@ -30,7 +30,9 @@ pub enum DispatchEvent {
     /// Sent when a guild becomes unavailable during a guild outage, or when the user leaves or is removed form a guild.
     GuildDelete(UnavailableGuild),
     /// Sent when a user is banned from a guild.
-    GuildBanAdd(GuildBanAdd),
+    GuildBanAdd(GuildBan),
+    /// Sent when a user is unbanned from a guild.
+    GuildBanRemove(GuildBan),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -44,6 +46,7 @@ pub(crate) enum DispatchEventCode {
     GuildUpdate,
     GuildDelete,
     GuildBanAdd,
+    GuildBanRemove,
 }
 
 /// A partial guild object.
@@ -57,9 +60,9 @@ pub struct UnavailableGuild {
 
 /// Sent when a user is banned form a guild.
 #[derive(Deserialize)]
-pub struct GuildBanAdd {
+pub struct GuildBan {
     /// The id of the guild.
     pub guild_id: GuildId,
-    /// The banned user.
+    /// The un/banned user.
     pub user: User,
 }
