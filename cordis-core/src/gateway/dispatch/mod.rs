@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use super::super::resources::{Channel, Guild, GuildId, User};
+use super::super::resources::{Channel, Emoji, Guild, GuildId, User};
 
 mod channel_pins_update;
 pub use channel_pins_update::ChannelPinsUpdate;
@@ -33,6 +33,8 @@ pub enum DispatchEvent {
     GuildBanAdd(GuildBan),
     /// Sent when a user is unbanned from a guild.
     GuildBanRemove(GuildBan),
+    /// Sent when a guild's emojis have been updated.
+    GuildEmojisUpdate(GuildEmojisUpdate)
 }
 
 #[derive(Deserialize, Serialize)]
@@ -47,6 +49,7 @@ pub(crate) enum DispatchEventCode {
     GuildDelete,
     GuildBanAdd,
     GuildBanRemove,
+    GuildEmojisUpdate,
 }
 
 /// A partial guild object.
@@ -65,4 +68,13 @@ pub struct GuildBan {
     pub guild_id: GuildId,
     /// The un/banned user.
     pub user: User,
+}
+
+/// Sent when a guild's emojis have been updated.
+#[derive(Deserialize)]
+pub struct GuildEmojisUpdate {
+    /// The id of the guild.
+    pub guild_id: GuildId,
+    /// The list of emojis on the guild.
+    pub emojis: Vec<Emoji>,
 }
