@@ -43,15 +43,23 @@ pub enum Channel {
     GuildStore(GuildStoreChannel),
 }
 
+/// The type of channel it is.
 #[derive(Deserialize_repr)]
 #[repr(u8)]
-enum ChannelCode {
+pub enum ChannelType {
+    /// A text channel within a server.
     GuildText = 0,
+    /// A direct message between users.
     Dm = 1,
+    /// A voice channel within a server.
     GuildVoice = 2,
+    /// A direct message between multiple users.
     GroupDm = 3,
+    /// An organisational category that contains channels.
     GuildCategory = 4,
+    /// A channel that users can follow and crosspost into their own server,
     GuildNews = 5,
+    /// A channel in which game developers can sell their game on Discord.
     GuildStore = 6,
 }
 
@@ -59,7 +67,7 @@ enum ChannelCode {
 struct InitialChannel {
     id: ChannelId,
     #[serde(rename = "type")]
-    code: ChannelCode,
+    code: ChannelType,
     guild_id: Option<GuildId>,
     position: Option<u32>,
     name: Option<String>,
@@ -83,7 +91,7 @@ impl<'de> Deserialize<'de> for Channel {
             bitrate, user_limit, icon, owner_id,
         } = InitialChannel::deserialize(d)?;
         Ok(match code {
-            ChannelCode::GuildText => Channel::GuildText(GuildTextChannel{
+            ChannelType::GuildText => Channel::GuildText(GuildTextChannel{
                 id, last_message_id, parent_id, last_pin_timestamp,
                 guild_id: guild_id.expect("Could not find `guild_id` for GuiltTextChannel."),
                 position: position.expect("Could not find `position` for GuildTextChannel."),
@@ -92,10 +100,10 @@ impl<'de> Deserialize<'de> for Channel {
                 nsfw: nsfw.expect("Could not find `nsfw` for GuildTextChannel."),
                 rate_limit_per_user: rate_limit_per_user.expect("Could not find `rate_limit_per_user` for GuildTextChannel."),
             }),
-            ChannelCode::Dm => Channel::DM(DMChannel{
+            ChannelType::Dm => Channel::DM(DMChannel{
                 id, last_message_id, last_pin_timestamp,
             }),
-            ChannelCode::GuildVoice => Channel::GuildVoice(GuildVoiceChannel{
+            ChannelType::GuildVoice => Channel::GuildVoice(GuildVoiceChannel{
                 id, parent_id,
                 guild_id: guild_id.expect("Could not find `guild_id` for GuildVoiceChannel."),
                 position: position.expect("Could not find `position` for GUildVoiceChannel."),
@@ -104,20 +112,20 @@ impl<'de> Deserialize<'de> for Channel {
                 bitrate: bitrate.expect("Could not find `bitrate` for GuildVoiceChannel."),
                 user_limit: user_limit.expect("Could not find `user_limit` for GuildVoiceChannel."),
             }),
-            ChannelCode::GroupDm => Channel::GroupDm(GroupDMChannel{
+            ChannelType::GroupDm => Channel::GroupDm(GroupDMChannel{
                 id, icon, last_message_id, last_pin_timestamp,
                 name: name.expect("Could not find `name` for GroupD<Channel."),
                 position: position.expect("Could not find `position` for GroupDMChannel."),
                 owner_id: owner_id.expect("Could not find `owner_id` for GroupDMChannel."),
             }),
-            ChannelCode::GuildCategory => Channel::GuildCategory(GuildCategoryChannel{
+            ChannelType::GuildCategory => Channel::GuildCategory(GuildCategoryChannel{
                 id, parent_id,
                 name: name.expect("Could not find `name` for GuildCategoryChannel."),
                 guild_id: guild_id.expect("Could not find `guild_id` for GuildCategoryChannel."),
                 position: position.expect("Could not find `position` for GuildCategoryChannel."),
                 nsfw: nsfw.expect("Could not find `nsfw` for GuildCategoryChannel."),
             }),
-            ChannelCode::GuildNews => Channel::GuildNews(GuildNewsChannel{
+            ChannelType::GuildNews => Channel::GuildNews(GuildNewsChannel{
                 id, parent_id, last_message_id, last_pin_timestamp,
                 name: name.expect("Could not find `name` for GuildNewsChannel."),
                 topic: topic.expect("Could not find `topic` for GuildNewsChannel."),
@@ -125,7 +133,7 @@ impl<'de> Deserialize<'de> for Channel {
                 position: position.expect("Could not find `position` for GuildNewsChannel."),
                 nsfw: nsfw.expect("Could not find `nsfw` for GuildNewsChannel."),
             }),
-            ChannelCode::GuildStore => Channel::GuildStore(GuildStoreChannel{
+            ChannelType::GuildStore => Channel::GuildStore(GuildStoreChannel{
                 id, parent_id,
                 name: name.expect("Could not find `name` for GuildStoreChannel."),
                 guild_id: guild_id.expect("Could not find `guild_id` for GuildStoreChannel."),

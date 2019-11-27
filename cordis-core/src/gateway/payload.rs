@@ -130,6 +130,34 @@ impl<'de> Deserialize<'de> for ReceivedPayload {
                     event: DispatchEvent::GuildRoleDelete(from_value(initial_payload.d.expect("Expected data in `GuildRoleDelete` event.")).expect("Could not parse `GuildRoleDelete` Payload data.")),
                     seq: initial_payload.s.expect("Expected sequence number in `GuildRoleDelete` event"),
                 }),
+                DispatchEventCode::MessageCreate => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::MessageCreate(from_value(initial_payload.d.expect("Expected data in `MessageCreate` event.")).expect("Could not parse `MessageCreate` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `MessageCreate` event"),
+                }),
+                DispatchEventCode::MessageUpdate => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::MessageUpdate(from_value(initial_payload.d.expect("Expected data in `MessageUpdate` event.")).expect("Could not parse `MessageUpdate` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `MessageUpdate` event"),
+                }),
+                DispatchEventCode::MessageDelete => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::MessageDelete(from_value(initial_payload.d.expect("Expected data in `MessageDelete` event.")).expect("Could not parse `MessageDelete` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `MessageDelete` event"),
+                }),
+                DispatchEventCode::MessageDeleteBulk => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::MessageDeleteBulk(from_value(initial_payload.d.expect("Expected data in `MessageDeleteBulk` event.")).expect("Could not parse `MessageDeleteBulk` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `MessageDeleteBulk` event"),
+                }),
+                DispatchEventCode::MessageReactionAdd => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::MessageReactionAdd(from_value(initial_payload.d.expect("Expected data in `MessageReactionAdd` event.")).expect("Could not parse `MessageReactionAdd` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `MessageReactionAdd` event"),
+                }),
+                DispatchEventCode::MessageReactionRemove => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::MessageReactionRemove(from_value(initial_payload.d.expect("Expected data in `MessageReactionRemove` event.")).expect("Could not parse `MessageReactionRemove` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `MessageReactionRemove` event"),
+                }),
+                DispatchEventCode::MessageReactionRemoveAll => Ok(ReceivedPayload::Dispatch{
+                    event: DispatchEvent::MessageReactionRemoveAll(from_value(initial_payload.d.expect("Expected data in `MessageReactionRemoveAll` event.")).expect("Could not parse `MessageReactionRemoveAll` Payload data.")),
+                    seq: initial_payload.s.expect("Expected sequence number in `MessageReactionRemoveAll` event"),
+                }),
             },
         }
     }

@@ -9,6 +9,8 @@ mod channel_pins_update;
 pub use channel_pins_update::ChannelPinsUpdate;
 mod guild_create;
 pub use guild_create::{ClientStatus, GuildCreate, PartialPresenceUpdate, PartialVoiceState, PartialUser};
+mod message;
+pub use message::{MessageUpdate, MessageDelete, MessageDeleteBulk, MessageReactionAdd, MessageReactionRemove, MessageReactionRemoveAll, UserWithMember};
 
 /// An event dispatched from the server.
 pub enum DispatchEvent {
@@ -52,6 +54,20 @@ pub enum DispatchEvent {
     GuildRoleUpdate(GuildRole),
     /// Sent when a guild role is deleted.
     GuildRoleDelete(GuildRoleDelete),
+    /// Sent when a message has been created.
+    MessageCreate(MessageUpdate),
+    /// Sent when a message has been updated.
+    MessageUpdate(MessageUpdate),
+    /// Sent when a message is deleted.
+    MessageDelete(MessageDelete),
+    /// Sent when multiple messages are deleted at once.
+    MessageDeleteBulk(MessageDeleteBulk),
+    /// Sent when a user adds a reaction to a message.
+    MessageReactionAdd(MessageReactionAdd),
+    /// Sent when a user removes a reaction to a message.
+    MessageReactionRemove(MessageReactionRemove),
+    /// Sent when a user explicitly removes all reactions from a message.
+    MessageReactionRemoveAll(MessageReactionRemoveAll),
 }
 
 #[derive(Deserialize, Serialize)]
@@ -75,6 +91,13 @@ pub(crate) enum DispatchEventCode {
     GuildRoleAdd,
     GuildRoleUpdate,
     GuildRoleDelete,
+    MessageCreate,
+    MessageUpdate,
+    MessageDelete,
+    MessageDeleteBulk,
+    MessageReactionAdd,
+    MessageReactionRemove,
+    MessageReactionRemoveAll,
 }
 
 /// A partial guild object.
